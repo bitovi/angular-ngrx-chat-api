@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  dynamodb:
+    image: 'amazon/dynamodb-local:latest'
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
+    container_name: dynamodb-local
+    env_file: .env
+    restart: always
+    ports:
+      - $DYNAMO_PORT:$DYNAMO_PORT
+    volumes:
+      - './docker/dynamodb:/home/dynamodblocal/data'
+    working_dir: /home/dynamodblocal
+
+  app:
+    container_name: angular-ngrx-chat-api
+    env_file: .env
+    restart: always
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      - dynamodb
+    stdin_open: true
+    tty: true

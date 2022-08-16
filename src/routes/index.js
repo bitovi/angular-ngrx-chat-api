@@ -1,5 +1,3 @@
-import { HTTPMethods } from 'fastify'
-
 const schema = {
   response: {
     200: {
@@ -12,34 +10,31 @@ const schema = {
 }
 
 const routes = {
-  auth: {
-    method: 'GET' as HTTPMethods,
-    url: '/auth',
+  sendMessage: {
+    method: 'GET',
+    url: '/chat/message',
     schema,
     handler: (request, reply) => {
       reply.send({ message: 'Authentication(WIP)' })
     },
+    wsHandler: (connection, request) => {
+      connection.socket.on('message', (message) => {
+        connection.socket.send(message.toString())
+      })
+    },
   },
 
   join: {
-    method: 'GET' as HTTPMethods,
-    url: '/join',
+    method: 'GET',
+    url: '/chat/join',
     handler: (request, reply) => {
       reply.send({ message: 'Authentication(WIP)' })
     },
     schema,
   },
   leave: {
-    method: 'GET' as HTTPMethods,
-    url: '/leave',
-    handler: (request, reply) => {
-      reply.send({ message: 'Authentication(WIP)' })
-    },
-    schema,
-  },
-  message: {
-    method: 'GET' as HTTPMethods,
-    url: '/message',
+    method: 'GET',
+    url: '/chat/leave',
     handler: (request, reply) => {
       reply.send({ message: 'Authentication(WIP)' })
     },
@@ -47,4 +42,4 @@ const routes = {
   },
 }
 
-export { routes }
+module.exports = { routes }

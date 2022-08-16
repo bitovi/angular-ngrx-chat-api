@@ -1,6 +1,6 @@
 {
-  "ext": "ts,json",
-  "exec": "ts-node --files src/server.ts",
+  "ext": "js",
+  "exec": "node src/server.js",
   "watch": ".",
   "env": {
     "NODE_ENV": "development"
