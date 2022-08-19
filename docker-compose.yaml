@@ -9,7 +9,7 @@ services:
     ports:
       - $DYNAMO_PORT:$DYNAMO_PORT
     volumes:
-      - './docker/dynamodb:/home/dynamodblocal/data'
+      - ./docker/dynamodb:/home/dynamodblocal/data
     working_dir: /home/dynamodblocal
 
   app:

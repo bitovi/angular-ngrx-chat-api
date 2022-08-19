@@ -1,4 +1,5 @@
 const fastify = require('fastify')
+const { tempMigration } = require('./db/tempMigration')
 const { routes } = require('./routes')
 const { sockets } = require('./sockets')
 require('dotenv').config()
@@ -13,10 +14,13 @@ server
 
 // Object.values(routes).forEach((route) => server.route(route))
 
-server.listen({ port: process.env.PORT, host: '::' }, (err, address) => {
-  if (err) {
-    console.error(err)
+server.listen({ port: process.env.PORT, host: '::' }, async (err, address) => {
+  try {
+    await tempMigration()
+
+    console.log(`Server listening at ${address}`)
+  } catch (error) {
+    console.error('Server Error =>', error)
     process.exit(1)
   }
-  console.log(`Server listening at ${address}`)
 })

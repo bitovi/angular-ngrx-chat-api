@@ -8,7 +8,7 @@
     "build": "npm run clean && npx tsc",
     "dev": "nodemon",
     "docker:start": "docker compose up",
-    "docker:start:dev": "docker compose up -d && docker exec -it angular-ngrx-chat-api sh",
+    "docker:start:dev": "docker compose up --build -d && docker exec -it angular-ngrx-chat-api sh",
     "docker:stop": "docker compose down -v",
     "start": "node server.js",
     "test": "jest"
@@ -24,10 +24,11 @@
   },
   "homepage": "https://github.com/bitovi/angular-ngrx-chat-api#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.150.0",
     "@fastify/express": "^2.0.1",
     "@fastify/middie": "^8.0.0",
     "@fastify/websocket": "^7.0.0",
+    "aws-sdk": "^2.1198.0",
+    "dynamodb-toolbox": "^0.4.3",
     "fastify": "^4.4.0",
     "jest": "^28.1.3",
     "jsonwebtoken": "^8.5.1"
