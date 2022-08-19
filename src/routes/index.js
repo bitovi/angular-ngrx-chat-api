@@ -4,41 +4,24 @@ const schema = {
       type: 'object',
       properties: {
         message: { type: 'string' },
+        data: { type: 'object' },
       },
     },
   },
 }
 
 const routes = {
-  sendMessage: {
-    method: 'GET',
-    url: '/chat/message',
+  createChat: {
+    method: 'POST',
+    url: '/chat',
     schema,
-    handler: (request, reply) => {
-      reply.send({ message: 'Authentication(WIP)' })
+    handler: async (request, reply) => {
+      try {
+        reply.send({ message: 'Chat(WIP)', data })
+      } catch (error) {
+        console.log('error =>', error)
+      }
     },
-    wsHandler: (connection, request) => {
-      connection.socket.on('message', (message) => {
-        connection.socket.send(message.toString())
-      })
-    },
-  },
-
-  join: {
-    method: 'GET',
-    url: '/chat/join',
-    handler: (request, reply) => {
-      reply.send({ message: 'Authentication(WIP)' })
-    },
-    schema,
-  },
-  leave: {
-    method: 'GET',
-    url: '/chat/leave',
-    handler: (request, reply) => {
-      reply.send({ message: 'Authentication(WIP)' })
-    },
-    schema,
   },
 }
 
