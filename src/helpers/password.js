@@ -1,18 +1,21 @@
-const { randomBytes, scryptSync } = require('crypto')
+const crypto = require('crypto')
+const util = require('util')
+
+const scrypt = util.promisify(crypto.scrypt)
 
 class Password {
-  static toHash(password) {
-    const salt = randomBytes(8).toString('hex')
+  static async toHash(password) {
+    const salt = crypto.randomBytes(8).toString('hex')
 
-    const buffer = scryptSync(password, salt, 64)
+    const buffer = await scrypt(password, salt, 64)
 
     return `${buffer.toString('hex')}.${salt}`
   }
 
-  static compare(storedPassword, suppliedPassword) {
+  static async compare(storedPassword, suppliedPassword) {
     const [hashedPassword, salt] = storedPassword.split('.')
 
-    const buffer = scryptSync(suppliedPassword, salt, 64)
+    const buffer = await scrypt(suppliedPassword, salt, 64)
 
     return buffer.toString('hex') === hashedPassword
   }

@@ -22,7 +22,6 @@ const User = new Entity({
     password: {
       type: 'string',
       required: 'always',
-      transform: (value) => Password.toHash(value),
     },
     createdAt: { type: 'string', sortKey: true, default: new Date() },
   },

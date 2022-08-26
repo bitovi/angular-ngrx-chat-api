@@ -38,7 +38,7 @@ const routes = async (fastify) => {
       await User.put({
         id,
         username,
-        password,
+        password: await Password.toHash(password),
       })
 
       reply.send({
@@ -82,7 +82,7 @@ const routes = async (fastify) => {
         })
       }
 
-      const passwordsMatch = Password.compare(user.password, password)
+      const passwordsMatch = await Password.compare(user.password, password)
 
       if (!passwordsMatch) {
         throw new ErrorResponse({
