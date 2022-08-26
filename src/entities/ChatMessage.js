@@ -1,10 +1,10 @@
 const { Table, Entity } = require('dynamodb-toolbox')
 const { DocumentClient } = require('../../config/db')
-const { v4: uuidv4 } = require('uuid')
 
 const table = new Table({
   name: 'chatMessages',
-  partitionKey: 'chatName',
+  partitionKey: 'chatId',
+  indexes: { chatMessagesIndex: { partitionKey: 'chatName' } },
   sortKey: 'sentAt',
   DocumentClient,
 })
@@ -14,12 +14,14 @@ const ChatMessage = new Entity({
   attributes: {
     chatId: {
       partitionKey: true,
-      unique: true,
       type: 'string',
       required: 'always',
-      default: uuidv4(),
     },
-    chatName: { unique: true, type: string, required: 'always' },
+    chatName: {
+      type: 'string',
+      required: 'always',
+      partitionKey: 'chatMessagesIndex',
+    },
     messageId: { type: 'string' },
     message: { type: 'string' },
     userId: { type: 'string' },

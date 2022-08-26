@@ -6,6 +6,7 @@ const codes = {
   ERR_DUPLICATE_PARAMETER: 'duplicate-parameter',
   ERR_NO_RESULTS_FOUND: 'no-results-found',
   ERR_NOT_FOUND: 'not-found',
+  ERR_SERVER_ERROR: 'server-error',
 }
 
 const statusCodes = {

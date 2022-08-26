@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const decipherToken = async (token) => {
+const decipherToken = (token) => {
   // Make sure token exists
   if (token && token.startsWith('Bearer')) {
     token = token.split(' ')[1]
