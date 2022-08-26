@@ -15,14 +15,14 @@ const routes = async (fastify) => {
     asyncHandler(async (request, reply) => {
       const { username, password } = request.body
 
-      if (!username || username === '') {
+      if (!username) {
         throw new ErrorResponse({
           title: 'Please provide an username.',
           code: codes.ERR_PARAMETER_REQUIRED,
           status: statusCodes.UNPROCESSABLE_ENTITY,
           pointer: 'username',
         })
-      } else if (!password || password === '') {
+      } else if (!password) {
         throw new ErrorResponse({
           title: 'Password is required.',
           code: codes.ERR_PARAMETER_REQUIRED,
@@ -53,14 +53,14 @@ const routes = async (fastify) => {
     asyncHandler(async (request, reply) => {
       const { username, password } = request.body
 
-      if (!username || username === '') {
+      if (!username) {
         throw new ErrorResponse({
           title: 'Please provide an username.',
           code: codes.ERR_PARAMETER_REQUIRED,
           status: statusCodes.UNPROCESSABLE_ENTITY,
           pointer: 'username',
         })
-      } else if (!password || password === '') {
+      } else if (!password) {
         throw new ErrorResponse({
           title: 'Password is required.',
           code: codes.ERR_PARAMETER_REQUIRED,
@@ -108,7 +108,7 @@ const routes = async (fastify) => {
     asyncHandler(async (request, reply) => {
       const { chatName } = request.body
 
-      if (!chatName || chatName === '') {
+      if (!chatName) {
         throw new ErrorResponse({
           title: 'Please provide a chatName.',
           code: codes.ERR_PARAMETER_REQUIRED,
