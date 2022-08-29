@@ -1,0 +1,41 @@
+name: Test and Deploy dev
+
+on:
+  push:
+    branches: [main]
+
+  # allows this job to be triggered via api
+  repository_dispatch:
+    types: [publish-event]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+      - name: test
+        run: |
+          echo "TODO: RUN TESTS"
+
+
+
+  # https://github.com/bitovi/github-actions-bitops-ci-cd
+  deploy-build-tools:
+    # only deploy if not pull request
+    if: github.event_name != 'pull_request'
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Stage
+        uses: bitovi/github-actions-bitops-ci-cd@0.5.0
+        with:
+          github-token: ${{ secrets.OPERATIONS_REPO_TOKEN }}
+          org: bitovi
+          repo: angular-ngrx-chat-operations
+          branch: main
+          workflow: deploy-dev-trigger.yaml

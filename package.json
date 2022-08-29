@@ -10,7 +10,7 @@
     "docker:start": "docker compose up",
     "docker:start:dev": "docker compose up -d && docker exec -it angular-ngrx-chat-api npm run dev",
     "docker:stop": "docker compose down -v",
-    "start": "node server.js",
+    "start": "node src/server.js",
     "test": "jest"
   },
   "repository": {

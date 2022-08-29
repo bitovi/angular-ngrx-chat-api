@@ -235,6 +235,17 @@ const routes = async (fastify) => {
       })
     }
   )
+
+  fastify.get(
+    '/up',
+    asyncHandler(async (request, reply) => {
+      try {
+        reply.send({ message: 'up' })
+      } catch (error) {
+        console.log('error =>', error)
+      }
+    })
+  )
 }
 
 module.exports = { routes }
