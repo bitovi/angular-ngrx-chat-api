@@ -174,16 +174,12 @@ const routes = async (fastify) => {
           message = message.toString()
 
           if (!chatId)
-            connection.socket.send(
-              JSON.stringify(
-                new ErrorResponse({
-                  title: 'chatId is required',
-                  status: statusCodes.BAD_REQUEST,
-                  code: codes.ERR_PARAMETER_REQUIRED,
-                  parameter: 'chatId',
-                })
-              )
-            )
+            throw new ErrorResponse({
+              title: 'chatId is required',
+              status: statusCodes.BAD_REQUEST,
+              code: codes.ERR_PARAMETER_REQUIRED,
+              parameter: 'chatId',
+            })
 
           // TODO: Needs to be cache, can't query these every time we send a message
           let [chat, user] = await Promise.all([
@@ -197,16 +193,12 @@ const routes = async (fastify) => {
           const username = user.Items[0].username
 
           if (!chat)
-            connection.socket.send(
-              JSON.stringify(
-                new ErrorResponse({
-                  title: 'Chat not found',
-                  status: statusCodes.NOT_FOUND,
-                  code: codes.ERR_NOT_FOUND,
-                  parameter: 'chatId',
-                })
-              )
-            )
+            throw new ErrorResponse({
+              title: 'Chat not found',
+              status: statusCodes.NOT_FOUND,
+              code: codes.ERR_NOT_FOUND,
+              parameter: 'chatId',
+            })
 
           const messageId = uuidv4()
 
@@ -226,15 +218,19 @@ const routes = async (fastify) => {
         } catch (error) {
           console.log('Error =>', error)
 
-          connection.socket.send(
-            JSON.stringify(
-              new ErrorResponse({
-                title: error.message || 'Internal Server Error',
-                status: statusCodes.INTERNAL_SERVER_ERROR,
-                code: codes.ERR_SERVER_ERROR,
-              })
+          if (error instanceof ErrorResponse) {
+            connection.socket.send(JSON.stringify(error))
+          } else {
+            connection.socket.send(
+              JSON.stringify(
+                new ErrorResponse({
+                  title: error.message || 'Internal Server Error',
+                  status: statusCodes.INTERNAL_SERVER_ERROR,
+                  code: codes.ERR_SERVER_ERROR,
+                })
+              )
             )
-          )
+          }
         }
       })
     }
