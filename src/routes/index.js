@@ -23,6 +23,18 @@ const routes = {
       }
     },
   },
+  createUp: {
+    method: 'GET',
+    url: '/up',
+    schema,
+    handler: async (request, reply) => {
+      try {
+        reply.send({ message: 'up' })
+      } catch (error) {
+        console.log('error =>', error)
+      }
+    },
+  },
 }
 
 module.exports = { routes }

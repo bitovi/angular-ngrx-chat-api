@@ -7,7 +7,7 @@ services:
     env_file: .env
     restart: always
     ports:
-      - $DYNAMO_PORT:$DYNAMO_PORT
+      - "${DYNAMO_PORT}:${DYNAMO_PORT}"
     volumes:
       - ./docker/dynamodb:/home/dynamodblocal/data
     working_dir: /home/dynamodblocal
@@ -19,8 +19,9 @@ services:
     build: .
     volumes:
       - .:/app
+      - /app/node_modules
     ports:
-      - $PORT:$PORT
+      - "${PORT}:${PORT}"
     depends_on:
       - dynamodb
     stdin_open: true
