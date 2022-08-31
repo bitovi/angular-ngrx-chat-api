@@ -8,7 +8,7 @@
     "build": "npm run clean && npx tsc",
     "dev": "nodemon",
     "docker:start": "docker compose up",
-    "docker:start:dev": "docker compose up --build -d && docker exec -it angular-ngrx-chat-api sh",
+    "docker:start:dev": "docker compose up -d && docker exec -it angular-ngrx-chat-api npm run dev",
     "docker:stop": "docker compose down -v",
     "start": "node src/server.js",
     "test": "jest"
@@ -31,7 +31,8 @@
     "dynamodb-toolbox": "^0.4.3",
     "fastify": "^4.4.0",
     "jest": "^28.1.3",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "dotenv": "^16.0.1",

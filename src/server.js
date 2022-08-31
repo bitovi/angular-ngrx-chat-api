@@ -1,7 +1,8 @@
 const fastify = require('fastify')
 const { tempMigration } = require('./db/tempMigration')
+const errorHandler = require('./managers/error/errorHandler')
 const { routes } = require('./routes')
-const { sockets } = require('./sockets')
+
 require('dotenv').config()
 
 const server = fastify()
@@ -10,9 +11,9 @@ server
   .register(require('@fastify/express'))
   // .register(require('@fastify/middie'))
   .register(require('@fastify/websocket'))
-  .register(sockets)
+  .register(routes)
 
-// Object.values(routes).forEach((route) => server.route(route))
+server.setErrorHandler(errorHandler)
 
 server.listen({ port: process.env.PORT, host: '::' }, async (err, address) => {
   try {
