@@ -19,12 +19,8 @@ const tempMigration = async () => {
     ],
     KeySchema: [
       {
-        AttributeName: 'id',
+        AttributeName: 'username',
         KeyType: 'HASH',
-      },
-      {
-        AttributeName: 'createdAt',
-        KeyType: 'RANGE',
       },
     ],
     GlobalSecondaryIndexes: [
@@ -32,12 +28,16 @@ const tempMigration = async () => {
         IndexName: 'usersIndex',
         KeySchema: [
           {
-            AttributeName: 'username',
+            AttributeName: 'id',
             KeyType: 'HASH',
+          },
+          {
+            AttributeName: 'createdAt',
+            KeyType: 'RANGE',
           },
         ],
         Projection: {
-          NonKeyAttributes: ['username', 'password'],
+          NonKeyAttributes: ['password'],
           ProjectionType: 'INCLUDE',
         },
         ProvisionedThroughput: {
@@ -71,12 +71,8 @@ const tempMigration = async () => {
     ],
     KeySchema: [
       {
-        AttributeName: 'chatId',
+        AttributeName: 'chatName',
         KeyType: 'HASH',
-      },
-      {
-        AttributeName: 'sentAt',
-        KeyType: 'RANGE',
       },
     ],
     GlobalSecondaryIndexes: [
@@ -84,12 +80,16 @@ const tempMigration = async () => {
         IndexName: 'chatMessagesIndex',
         KeySchema: [
           {
-            AttributeName: 'chatName',
+            AttributeName: 'chatId',
             KeyType: 'HASH',
+          },
+          {
+            AttributeName: 'sentAt',
+            KeyType: 'RANGE',
           },
         ],
         Projection: {
-          NonKeyAttributes: ['chatName'],
+          NonKeyAttributes: ['chatId', 'sentAt'],
           ProjectionType: 'INCLUDE',
         },
         ProvisionedThroughput: {

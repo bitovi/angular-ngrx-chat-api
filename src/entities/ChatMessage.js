@@ -1,7 +1,7 @@
 const { Table, Entity } = require('dynamodb-toolbox')
 const { DocumentClient } = require('../../config/db')
 
-const table = new Table({
+const ChatMessageTable = new Table({
   name: 'chatMessages',
   partitionKey: 'chatId',
   indexes: { chatMessagesIndex: { partitionKey: 'chatName' } },
@@ -28,7 +28,7 @@ const ChatMessage = new Entity({
     username: { type: 'string' },
     sentAt: { sortKey: true, default: new Date() },
   },
-  table,
+  table: ChatMessageTable,
 })
 
-module.exports = ChatMessage
+module.exports = { ChatMessage, ChatMessageTable }

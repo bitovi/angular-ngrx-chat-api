@@ -8,7 +8,7 @@
     "build": "npm run clean && npx tsc",
     "dev": "nodemon",
     "docker:start": "docker compose up",
-    "docker:start:dev": "docker compose up -d && docker exec -it angular-ngrx-chat-api npm run dev",
+    "docker:start:dev": "docker compose up -d && docker exec angular-ngrx-chat-api npm i && docker exec -it angular-ngrx-chat-api npm run dev",
     "docker:stop": "docker compose down -v",
     "start": "node src/server.js",
     "test": "jest"
