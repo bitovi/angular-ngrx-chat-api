@@ -2,11 +2,12 @@ const { signToken } = require('../helpers/signToken')
 const { decipherToken } = require('../helpers/decipherToken')
 const asyncHandler = require('../middlewares/asyncHandler')
 const ErrorResponse = require('../managers/error/ErrorResponse')
-const User = require('../entities/User')
+const { User, UserTable } = require('../entities/User')
 const { statusCodes, codes } = require('../managers/error/constants')
 const Password = require('../helpers/password')
 const { v4: uuidv4 } = require('uuid')
-const ChatMessage = require('../entities/ChatMessage')
+const { ChatMessage, ChatMessageTable } = require('../entities/ChatMessage')
+const { ddbClient } = require('../../config/db')
 
 const routes = async (fastify) => {
   // Sign up
@@ -31,19 +32,40 @@ const routes = async (fastify) => {
         })
       }
 
-      // TODO: Add unique constraint for username
-
       const id = uuidv4()
 
-      await User.put({
-        id,
-        username,
-        password: await Password.toHash(password),
-      })
+      try {
+        await UserTable.transactWrite([
+          User.putTransaction(
+            {
+              id,
+              username,
+              password: await Password.toHash(password),
+            },
+            {
+              conditions: {
+                attr: 'username',
+                exists: false,
+              },
+            }
+          ),
+        ])
 
-      reply.send({
-        token: signToken(id),
-      })
+        reply.send({
+          token: signToken(id),
+        })
+      } catch (error) {
+        if (error.code === 'TransactionCanceledException') {
+          throw new ErrorResponse({
+            title: 'User with username already exists.',
+            code: codes.ERR_DUPLICATE_PARAMETER,
+            status: statusCodes.CONFLICT,
+            pointer: 'username',
+          })
+        } else {
+          throw error
+        }
+      }
     })
   )
 
@@ -119,11 +141,33 @@ const routes = async (fastify) => {
 
       const chatId = uuidv4()
 
-      // TODO: Add unique constraint for chatName
-      await ChatMessage.put({
-        chatId,
-        chatName,
-      })
+      try {
+        await ChatMessageTable.transactWrite([
+          ChatMessage.putTransaction(
+            {
+              chatId,
+              chatName,
+            },
+            {
+              conditions: {
+                attr: 'chatName',
+                exists: false,
+              },
+            }
+          ),
+        ])
+      } catch (error) {
+        if (error.code === 'TransactionCanceledException') {
+          throw new ErrorResponse({
+            title: 'Chat with name already exists.',
+            code: codes.ERR_DUPLICATE_PARAMETER,
+            status: statusCodes.CONFLICT,
+            pointer: 'chatName',
+          })
+        } else {
+          throw error
+        }
+      }
 
       reply.send({
         data: {

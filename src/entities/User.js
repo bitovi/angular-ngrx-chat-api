@@ -2,10 +2,10 @@ const { Table, Entity } = require('dynamodb-toolbox')
 const { DocumentClient } = require('../../config/db')
 const Password = require('../helpers/password')
 
-const table = new Table({
+const UserTable = new Table({
   name: 'users',
-  partitionKey: 'id',
-  indexes: { usersIndex: { partitionKey: 'username' } },
+  partitionKey: 'username',
+  indexes: { usersIndex: { partitionKey: 'id' } },
   sortKey: 'createdAt',
   DocumentClient,
 })
@@ -13,11 +13,11 @@ const table = new Table({
 const User = new Entity({
   name: 'User',
   attributes: {
-    id: { partitionKey: true },
+    id: { partitionKey: 'usersIndex' },
     username: {
       type: 'string',
       required: 'always',
-      partitionKey: 'usersIndex',
+      partitionKey: true,
     },
     password: {
       type: 'string',
@@ -25,7 +25,7 @@ const User = new Entity({
     },
     createdAt: { type: 'string', sortKey: true, default: new Date() },
   },
-  table,
+  table: UserTable,
 })
 
-module.exports = User
+module.exports = { User, UserTable }
