@@ -3,8 +3,8 @@ const { DocumentClient } = require('../../config/db')
 
 const ChatMessageTable = new Table({
   name: 'chatMessages',
-  partitionKey: 'chatId',
-  indexes: { chatMessagesIndex: { partitionKey: 'chatName' } },
+  partitionKey: 'chatName',
+  indexes: { chatMessagesIndex: { partitionKey: 'chatId' } },
   sortKey: 'sentAt',
   DocumentClient,
 })
@@ -13,20 +13,22 @@ const ChatMessage = new Entity({
   name: 'ChatMessage',
   attributes: {
     chatId: {
-      partitionKey: true,
+      partitionKey: 'chatMessagesIndex',
       type: 'string',
       required: 'always',
     },
     chatName: {
       type: 'string',
-      required: 'always',
-      partitionKey: 'chatMessagesIndex',
+      partitionKey: true,
     },
     messageId: { type: 'string' },
     message: { type: 'string' },
     userId: { type: 'string' },
     username: { type: 'string' },
-    sentAt: { sortKey: true, default: new Date() },
+    sentAt: {
+      sortKey: true,
+      default: new Date(),
+    },
   },
   table: ChatMessageTable,
 })
