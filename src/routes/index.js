@@ -7,7 +7,6 @@ const { statusCodes, codes } = require('../managers/error/constants')
 const Password = require('../helpers/password')
 const { v4: uuidv4 } = require('uuid')
 const { ChatMessage, ChatMessageTable } = require('../entities/ChatMessage')
-const { ddbClient } = require('../../config/db')
 
 const routes = async (fastify) => {
   // Sign up
@@ -92,8 +91,7 @@ const routes = async (fastify) => {
       }
 
       // TODO: Generate user instead with a random username and password
-      const user = (await User.query(username, { index: 'usersIndex' }))
-        .Items[0]
+      const user = (await User.query(username)).Items[0]
 
       if (!user) {
         throw new ErrorResponse({
@@ -178,6 +176,26 @@ const routes = async (fastify) => {
     })
   )
 
+  // Get chats
+  fastify.get(
+    '/chats',
+    asyncHandler(async (request, reply) => {
+      const chats = (
+        await ChatMessage.scan({
+          filters: {
+            attr: 'message',
+            exists: false,
+          },
+        })
+      ).Items
+
+      //  TODO: Define response format
+      reply.send({
+        data: chats,
+      })
+    })
+  )
+
   // Get Messages
   fastify.get(
     '/chat/:id/messages',
@@ -196,8 +214,18 @@ const routes = async (fastify) => {
           )
         )
 
+      // TODO: Check if chat exists
+
       // TODO: Implement pagination
-      const messages = (await ChatMessage.query(chatId)).Items
+      const messages = (
+        await ChatMessage.query(chatId, {
+          index: 'chatMessagesIndex',
+          filters: {
+            attr: 'message',
+            exists: true,
+          },
+        })
+      ).Items
 
       //  TODO: Define response format
       reply.send({
@@ -227,8 +255,8 @@ const routes = async (fastify) => {
 
           // TODO: Needs to be cache, can't query these every time we send a message
           let [chat, user] = await Promise.all([
-            ChatMessage.query(chatId),
-            User.query(userId),
+            ChatMessage.query(chatId, { index: 'chatMessagesIndex' }),
+            User.query(userId, { index: 'usersIndex' }),
           ])
 
           chat = chat.Items[0]
@@ -280,6 +308,7 @@ const routes = async (fastify) => {
     }
   )
 
+  // Health check
   fastify.get(
     '/up',
     asyncHandler(async (request, reply) => {

@@ -1,6 +1,17 @@
+const { ddbClient } = require('../../config/db')
 const { createTableIfNotExist } = require('../helpers/createTableIfNotExist')
 
 const tempMigration = async () => {
+  // Temporary: Drop tables, till migrations functionality is set
+  const tables = (await ddbClient.listTables().promise()).TableNames
+
+  for (let i = 0; i < tables.length; i++) {
+    const TableName = tables[i]
+
+    await ddbClient.deleteTable({ TableName }).promise()
+    console.log(`${TableName} table deleted.`)
+  }
+
   // Users table
   await createTableIfNotExist({
     AttributeDefinitions: [
@@ -61,11 +72,11 @@ const tempMigration = async () => {
         AttributeType: 'S',
       },
       {
-        AttributeName: 'sentAt',
+        AttributeName: 'chatName',
         AttributeType: 'S',
       },
       {
-        AttributeName: 'chatName',
+        AttributeName: 'sentAt',
         AttributeType: 'S',
       },
     ],
@@ -73,6 +84,10 @@ const tempMigration = async () => {
       {
         AttributeName: 'chatName',
         KeyType: 'HASH',
+      },
+      {
+        AttributeName: 'sentAt',
+        KeyType: 'RANGE',
       },
     ],
     GlobalSecondaryIndexes: [
@@ -83,13 +98,16 @@ const tempMigration = async () => {
             AttributeName: 'chatId',
             KeyType: 'HASH',
           },
-          {
-            AttributeName: 'sentAt',
-            KeyType: 'RANGE',
-          },
         ],
         Projection: {
-          NonKeyAttributes: ['chatId', 'sentAt'],
+          NonKeyAttributes: [
+            'sentAt',
+            'chatId',
+            'messageId',
+            'message',
+            'userId',
+            'username',
+          ],
           ProjectionType: 'INCLUDE',
         },
         ProvisionedThroughput: {
