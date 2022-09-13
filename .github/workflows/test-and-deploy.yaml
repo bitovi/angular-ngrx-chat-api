@@ -25,7 +25,7 @@ jobs:
 
 
   # https://github.com/bitovi/github-actions-bitops-ci-cd
-  deploy-build-tools:
+  deploy-dev:
     # only deploy if not pull request
     if: github.event_name != 'pull_request'
     needs: [test]
