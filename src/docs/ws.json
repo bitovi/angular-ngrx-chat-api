@@ -1,0 +1,122 @@
+{
+  "asyncapi": "1.0.0",
+  "info": {
+    "title": "Angular NgRx Websocket Endpoint",
+    "version": "1.0.0",
+    "description": "Documentation for the Angular NgRx Websocket Endpoint"
+  },
+
+  "servers": [
+    {
+      "url": "http://localhost:{port}/chat/{chatId}/send",
+      "description": "Allows you to connect using Websocket.",
+      "schema": "ws",
+      "variables": {
+        "chatId": {
+          "default": "397fed73-4bcb-49ea-938b-74d4fe5ce811",
+          "description": "You can get your `chatId` from the GET /chats REST endpoint"
+        },
+        "port": {
+          "default": "8080"
+        }
+      }
+    },
+
+    {
+      "url": "https://dev.angular-ngrx-chat.com/chat/{chatId}/send",
+      "description": "Allows you to connect using Websocket.",
+      "schema": "wss",
+      "variables": {
+        "chatId": {
+          "default": "397fed73-4bcb-49ea-938b-74d4fe5ce811",
+          "description": "You can get your `chatId` from the GET /chats REST endpoint"
+        }
+      }
+    }
+  ],
+
+  "externalDocs": {
+    "description": "See Other REST endpoints",
+    "url": "/docs"
+  },
+
+  "topics": {
+    "action.send.message": {
+      "publish": {
+        "$ref": "#/components/messages/sendMessage"
+      }
+    },
+    "event.send.message": {
+      "subscribe": {
+        "$ref": "#/components/messages/message"
+      }
+    }
+  },
+
+  "components": {
+    "messages": {
+      "sendMessage": {
+        "summary": "Action to send a message.",
+        "description": "",
+        "headers": {
+          "type": "object",
+          "properties": {
+            "Authorization": {
+              "description": "Bearer {{Token}}"
+            }
+          }
+        },
+        "payload": {
+          "type": "string",
+          "description": "Message",
+          "example": "Hello world!"
+        }
+      },
+      "message": {
+        "payload": {
+          "type": "object",
+          "properties": {
+            "chatId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The chat's unique identifier",
+              "example": "c1604ce0-2280-47b6-8230-6429dd4b5dd9"
+            },
+            "chatName": {
+              "type": "string",
+              "description": "Name of chat",
+              "example": "Actions and Reducers"
+            },
+            "messageId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The message's unique identifier",
+              "example": "deecd998-c552-40b6-868d-28f99a338fdd"
+            },
+            "message": {
+              "type": "string",
+              "description": "Name of chat",
+              "example": "Hello world!"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The user's unique identifier",
+              "example": "5d99e226-7891-4ec6-8016-59ac86e1ace7"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the user",
+              "example": "Marshall"
+            },
+            "sentAt": {
+              "type": "string",
+              "description": "Message timestamp",
+              "example": "2022-09-28T19:05:43.633Z"
+            }
+          }
+        }
+      }
+    }
+  }
+}

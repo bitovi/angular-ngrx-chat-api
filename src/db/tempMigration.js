@@ -125,4 +125,5 @@ const tempMigration = async () => {
 
   console.log('Migrations complete.')
 }
+
 module.exports = { tempMigration }
