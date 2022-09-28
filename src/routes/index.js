@@ -8,10 +8,122 @@ const Password = require('../helpers/password')
 const { v4: uuidv4 } = require('uuid')
 const { ChatMessage, ChatMessageTable } = require('../entities/ChatMessage')
 
+const md = require('markdown-it')({
+  html: true,
+  typographer: true,
+  linkify: true,
+  highlight: (str, lang) =>
+    `
+        <code style="
+          display: block;
+          padding: 9.5px;
+          margin: 0px auto 0px auto;
+          font-size: 13px;
+          line-height: 1.42857143;
+          color: #333;
+          word-break: break-all;
+          word-wrap: break-word;
+          background-color: #f5f5f5;
+          border: 1px solid #ccc;
+          border-radius: 4px;"
+          >
+            ${str}
+        </code>
+    `,
+})
+
+const fs = require('fs')
+const path = require('path')
+const util = require('util')
+const user = require('../schemas/user')
+const chatMessage = require('../schemas/chatMessage')
+
+const readFile = util.promisify(fs.readFile)
+
 const routes = async (fastify) => {
+  // Docs
+  fastify.get(
+    '/ws/docs',
+    {
+      schema: {
+        description: 'Websocket docs at /ws/docs',
+      },
+    },
+    asyncHandler(async (request, reply) => {
+      const markdownOutput = await readFile(
+        path.resolve(__dirname, '../docs/ws.md'),
+        'utf8'
+      )
+
+      reply.type('text/html').send(md.render(markdownOutput))
+    })
+  )
+
+  // fastify.route({
+  //   method: 'POST',
+  //   url: '/signup',
+  //   handler: asyncHandler(async (request, reply) => {
+  //     const { username, password } = request.body
+
+  //     if (!username) {
+  //       throw new ErrorResponse({
+  //         title: 'Please provide an username.',
+  //         code: codes.ERR_PARAMETER_REQUIRED,
+  //         status: statusCodes.UNPROCESSABLE_ENTITY,
+  //         pointer: 'username',
+  //       })
+  //     } else if (!password) {
+  //       throw new ErrorResponse({
+  //         title: 'Password is required.',
+  //         code: codes.ERR_PARAMETER_REQUIRED,
+  //         status: statusCodes.UNPROCESSABLE_ENTITY,
+  //         pointer: 'password',
+  //       })
+  //     }
+
+  //     const id = uuidv4()
+
+  //     try {
+  //       await UserTable.transactWrite([
+  //         User.putTransaction(
+  //           {
+  //             id,
+  //             username,
+  //             password: await Password.toHash(password),
+  //           },
+  //           {
+  //             conditions: {
+  //               attr: 'username',
+  //               exists: false,
+  //             },
+  //           }
+  //         ),
+  //       ])
+
+  //       reply.send({
+  //         token: signToken(id),
+  //       })
+  //     } catch (error) {
+  //       if (error.code === 'TransactionCanceledException') {
+  //         throw new ErrorResponse({
+  //           title: 'User with username already exists.',
+  //           code: codes.ERR_DUPLICATE_PARAMETER,
+  //           status: statusCodes.CONFLICT,
+  //           pointer: 'username',
+  //         })
+  //       } else {
+  //         throw error
+  //       }
+  //     }
+  //   }),
+  //   schema: user.signup,
+  // })
   // Sign up
   fastify.post(
     '/signup',
+    {
+      schema: user.signup,
+    },
     asyncHandler(async (request, reply) => {
       const { username, password } = request.body
 
@@ -71,6 +183,9 @@ const routes = async (fastify) => {
   // Sign in
   fastify.post(
     '/signin',
+    {
+      schema: user.signin,
+    },
     asyncHandler(async (request, reply) => {
       const { username, password } = request.body
 
@@ -125,6 +240,9 @@ const routes = async (fastify) => {
   // Create chats
   fastify.post(
     '/chat',
+    {
+      schema: chatMessage.createChat,
+    },
     asyncHandler(async (request, reply) => {
       const { chatName } = request.body
 
@@ -179,6 +297,9 @@ const routes = async (fastify) => {
   // Get chats
   fastify.get(
     '/chats',
+    {
+      schema: chatMessage.getChats,
+    },
     asyncHandler(async (request, reply) => {
       const chats = (
         await ChatMessage.scan({
@@ -199,6 +320,9 @@ const routes = async (fastify) => {
   // Get Messages
   fastify.get(
     '/chat/:id/messages',
+    {
+      schema: chatMessage.getChatMessages,
+    },
     asyncHandler(async (request, reply) => {
       const chatId = request.params.id
 
@@ -237,7 +361,13 @@ const routes = async (fastify) => {
   // Send Message
   fastify.get(
     '/chat/:id/send',
-    { websocket: true },
+    {
+      websocket: true,
+      schema: {
+        // TODO: Include host
+        description: 'Websocket docs at /ws/docs',
+      },
+    },
     async (connection, request) => {
       connection.socket.on('message', async (message) => {
         try {
@@ -311,6 +441,20 @@ const routes = async (fastify) => {
   // Health check
   fastify.get(
     '/up',
+    {
+      schema: {
+        description: 'Health check',
+        response: {
+          default: {
+            description: 'Success: API server is up and running',
+            type: 'object',
+            example: {
+              message: 'up',
+            },
+          },
+        },
+      },
+    },
     asyncHandler(async (request, reply) => {
       try {
         reply.send({ message: 'up' })
