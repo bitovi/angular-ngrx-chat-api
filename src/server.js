@@ -1,28 +1,15 @@
-const fastify = require('fastify')
+const build = require('./app')
 const { tempMigration } = require('./db/tempMigration')
-const setupFastifySwagger = require('./fastify-swagger')
 const generateSocketDocs = require('./helpers/generateSocketDocs')
-const errorHandler = require('./managers/error/errorHandler')
-const { routes } = require('./routes')
 
-require('dotenv').config()
-
-const server = fastify()
-
-setupFastifySwagger(server)
-
-server
-  .register(require('@fastify/express'))
-  // .register(require('@fastify/middie'))
-  .register(require('@fastify/websocket'))
-  .register(routes)
-
-server.setErrorHandler(errorHandler)
+const server = build()
 
 server.listen({ port: process.env.PORT, host: '::' }, async (err, address) => {
   try {
-    await tempMigration()
-    await generateSocketDocs()
+    // await tempMigration()
+    // await generateSocketDocs()
+
+    if (err) throw err
 
     console.log(`Server listening at ${address}`)
   } catch (error) {

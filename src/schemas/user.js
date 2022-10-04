@@ -1,3 +1,5 @@
+const errorSchema = require('./error')
+
 const properties = {
   id: {
     type: 'string',
@@ -20,6 +22,15 @@ const properties = {
     description: 'Sign up date',
     // example: '2022-09-28T19:05:43.633Z',
   },
+  modified: {
+    type: 'string',
+    description: 'Modified date',
+    // example: '2022-09-28T19:05:43.633Z',
+  },
+  entity: {
+    type: 'string',
+    description: 'User',
+  },
 }
 
 const tags = ['user']
@@ -30,38 +41,71 @@ const signup = {
   tags,
   body: {
     type: 'object',
-    required: ['username', 'password'],
     properties: {
       username: {
         type: 'string',
         description: 'Username of the user',
-        // example: 'Marshall',
       },
       password: {
         type: 'string',
         description: 'User password',
-        // example: 'h31l0|w0rlD!',
       },
     },
     additionalProperties: false,
-  },
-  example: {
-    username: 'Marshall',
-    password: 'whatever',
-  },
-  errortitle: {
-    required: {
-      username: 'username is required',
-      password: 'password is required',
-    },
   },
   response: {
     default: {
       description: 'Success: User signed up',
       type: 'object',
+      properties: {
+        token: {
+          type: 'string',
+          description: 'User token',
+        },
+      },
       example: {
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXh0IjoiZTVlMjRlNzctZjVlNi00ODU5LWIxMTItNjg0NTU2NDRhOWNhIiwiaWF0IjoxNjYzMDAwMjM0LCJleHAiOjM2MDAwMDAwMDE2NjMwMDAwMDB9.vejKSPTblWG-lNOFVcW48XiaC2xb3jhI_uaHQFXjJww',
+      },
+    },
+    409: {
+      description: 'Conflict Error',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: errorSchema,
+        },
+      },
+      example: {
+        error: {
+          status: '409',
+          code: 'duplicate-parameter',
+          title: 'User with username already exists.',
+          source: {
+            pointer: '/username',
+          },
+        },
+      },
+    },
+    422: {
+      description: 'Unprocessable entity',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: errorSchema,
+        },
+      },
+      example: {
+        error: {
+          status: '422',
+          code: 'parameter-required',
+          title: 'Password is required.',
+          source: {
+            pointer: '/password',
+          },
+        },
       },
     },
   },
@@ -73,17 +117,14 @@ const signin = {
   tags,
   body: {
     type: 'object',
-    required: ['username', 'password'],
     properties: {
       username: {
         type: 'string',
         description: 'Username of the user',
-        // example: 'Marshall',
       },
       password: {
         type: 'string',
         description: 'User password',
-        // example: 'h31l0|w0rlD!',
       },
     },
     additionalProperties: false,
@@ -96,6 +137,13 @@ const signin = {
     default: {
       description: 'Success: User signed in',
       type: 'object',
+      properties: {
+        token: {
+          type: 'string',
+          description: 'User token',
+        },
+        data: properties,
+      },
       example: {
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXh0IjoiZTVlMjRlNzctZjVlNi00ODU5LWIxMTItNjg0NTU2NDRhOWNhIiwiaWF0IjoxNjYzMDAwNDM0LCJleHAiOjM2MDAwMDAwMDE2NjMwMDA2MDB9.Rei7AyDe2pS7jomOfLRb2HCidtNvq0bg-HJu0riAHTU',
@@ -107,6 +155,46 @@ const signin = {
           id: 'e5e24e77-f5e6-4859-b112-68455644a9ca',
           entity: 'User',
           username: 'Marshall',
+        },
+      },
+    },
+    404: {
+      description: 'Not found',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: errorSchema,
+        },
+      },
+      example: {
+        error: {
+          status: '404',
+          code: 'not-found',
+          title: "Username doesn't exist.",
+          source: {
+            pointer: '/username',
+          },
+        },
+      },
+    },
+    422: {
+      description: 'Unprocessable entity',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: errorSchema,
+        },
+      },
+      example: {
+        error: {
+          status: '422',
+          code: 'parameter-required',
+          title: 'Please provide an username.',
+          source: {
+            pointer: '/username',
+          },
         },
       },
     },

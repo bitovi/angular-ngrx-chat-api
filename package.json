@@ -8,10 +8,10 @@
     "build": "npm run clean && npx tsc",
     "dev": "nodemon",
     "docker:start": "docker compose up",
-    "docker:start:dev": "docker compose up -d && docker exec angular-ngrx-chat-api npm i && docker exec -it angular-ngrx-chat-api npm run dev",
+    "docker:start:dev": "docker compose up --build -d && docker exec angular-ngrx-chat-api npm i && docker exec -it angular-ngrx-chat-api npm run dev",
     "docker:stop": "docker compose down -v",
     "start": "node src/server.js",
-    "test": "jest"
+    "test": "jest --silent=false --watchAll"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,9 @@
     "@fastify/middie": "^8.0.0",
     "@fastify/swagger": "^7.6.1",
     "@fastify/websocket": "^7.0.0",
+    "@shelf/jest-dynamodb": "^3.3.1",
     "aws-sdk": "^2.1198.0",
+    "casual": "^1.6.2",
     "dynamodb-toolbox": "^0.4.3",
     "fastify": "^4.4.0",
     "jest": "^28.1.3",

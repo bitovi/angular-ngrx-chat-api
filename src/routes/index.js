@@ -59,65 +59,6 @@ const routes = async (fastify) => {
     })
   )
 
-  // fastify.route({
-  //   method: 'POST',
-  //   url: '/signup',
-  //   handler: asyncHandler(async (request, reply) => {
-  //     const { username, password } = request.body
-
-  //     if (!username) {
-  //       throw new ErrorResponse({
-  //         title: 'Please provide an username.',
-  //         code: codes.ERR_PARAMETER_REQUIRED,
-  //         status: statusCodes.UNPROCESSABLE_ENTITY,
-  //         pointer: 'username',
-  //       })
-  //     } else if (!password) {
-  //       throw new ErrorResponse({
-  //         title: 'Password is required.',
-  //         code: codes.ERR_PARAMETER_REQUIRED,
-  //         status: statusCodes.UNPROCESSABLE_ENTITY,
-  //         pointer: 'password',
-  //       })
-  //     }
-
-  //     const id = uuidv4()
-
-  //     try {
-  //       await UserTable.transactWrite([
-  //         User.putTransaction(
-  //           {
-  //             id,
-  //             username,
-  //             password: await Password.toHash(password),
-  //           },
-  //           {
-  //             conditions: {
-  //               attr: 'username',
-  //               exists: false,
-  //             },
-  //           }
-  //         ),
-  //       ])
-
-  //       reply.send({
-  //         token: signToken(id),
-  //       })
-  //     } catch (error) {
-  //       if (error.code === 'TransactionCanceledException') {
-  //         throw new ErrorResponse({
-  //           title: 'User with username already exists.',
-  //           code: codes.ERR_DUPLICATE_PARAMETER,
-  //           status: statusCodes.CONFLICT,
-  //           pointer: 'username',
-  //         })
-  //       } else {
-  //         throw error
-  //       }
-  //     }
-  //   }),
-  //   schema: user.signup,
-  // })
   // Sign up
   fastify.post(
     '/signup',
@@ -162,7 +103,7 @@ const routes = async (fastify) => {
           ),
         ])
 
-        reply.send({
+        reply.status(201).send({
           token: signToken(id),
         })
       } catch (error) {
@@ -211,7 +152,7 @@ const routes = async (fastify) => {
       if (!user) {
         throw new ErrorResponse({
           title: "Username doesn't exist.",
-          code: codes.ERR_NOT_FOUND, //
+          code: codes.ERR_NOT_FOUND,
           status: statusCodes.NOT_FOUND,
           pointer: 'username',
         })
@@ -285,7 +226,7 @@ const routes = async (fastify) => {
         }
       }
 
-      reply.send({
+      reply.status(201).send({
         data: {
           chatId,
           chatName,
