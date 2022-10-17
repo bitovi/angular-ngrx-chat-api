@@ -182,7 +182,6 @@ describe('REST Routes', () => {
     // // Perform assertions on the response
     await waitForSocketState(client, client.CLOSED)
 
-    console.log('responseMessage =>', responseMessage)
     expect(responseMessage.message).toBe(testMessage)
   })
 
@@ -196,15 +195,15 @@ describe('REST Routes', () => {
   })
 })
 
-// afterAll(async () => {
-//   //   server.close()
+afterAll(async () => {
+  app.close()
 
-//   const tables = (await ddbClient.listTables().promise()).TableNames
+  const tables = (await ddbClient.listTables().promise()).TableNames
 
-//   for (let i = 0; i < tables.length; i++) {
-//     const TableName = tables[i]
+  for (let i = 0; i < tables.length; i++) {
+    const TableName = tables[i]
 
-//     await ddbClient.deleteTable({ TableName }).promise()
-//     console.log(`${TableName} table deleted.`)
-//   }
-// })
+    await ddbClient.deleteTable({ TableName }).promise()
+    console.log(`${TableName} table deleted.`)
+  }
+})

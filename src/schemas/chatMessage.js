@@ -59,7 +59,6 @@ const createChat = {
   tags,
   body: {
     type: 'object',
-
     properties: {
       chatName: {
         type: 'string',

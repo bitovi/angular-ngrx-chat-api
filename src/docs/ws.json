@@ -14,7 +14,7 @@
       "variables": {
         "chatId": {
           "default": "397fed73-4bcb-49ea-938b-74d4fe5ce811",
-          "description": "You can get your `chatId` from the get chats REST endpoint"
+          "description": "You can get your `chatId` from the GET /chats REST endpoint"
         },
         "port": {
           "default": "8080"
@@ -29,7 +29,7 @@
       "variables": {
         "chatId": {
           "default": "397fed73-4bcb-49ea-938b-74d4fe5ce811",
-          "description": "You can get your `chatId` from the get chats REST endpoint"
+          "description": "You can get your `chatId` from the GET /chats REST endpoint"
         }
       }
     }
@@ -57,7 +57,7 @@
     "messages": {
       "sendMessage": {
         "summary": "Action to send a message.",
-        "description": "Action to send a message.",
+        "description": "",
         "headers": {
           "type": "object",
           "properties": {
