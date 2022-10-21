@@ -10,7 +10,7 @@ const setupFastifySwagger = (fastify) => {
       info: {
         title: 'angular-ngrx-chat-api',
         description: 'Angular NgRx Websocket REST Endpoints',
-        version: '0.1.0',
+        version: '1.0.0',
       },
       externalDocs: {
         url: '/ws/docs',

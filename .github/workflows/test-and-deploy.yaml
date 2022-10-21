@@ -3,6 +3,8 @@ name: Test and Deploy dev
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
   # allows this job to be triggered via api
   repository_dispatch:
@@ -12,17 +14,34 @@ on:
   workflow_dispatch:
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
+    env:
+      DYNAMO_REGION: us-east-1
+      DYNAMO_TEST_URL: http://localhost
+      DYNAMO_PORT: 8000
+      AWS_ACCESS_KEY_ID: DUMMYIDEXAMPLE
+      AWS_SECRET_ACCESS_KEY: DUMMYEXAMPLEKEY
+      JWT_SECRET: whatever
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v2
-      - name: test
-        run: |
-          echo "TODO: RUN TESTS"
-
-
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
 
   # https://github.com/bitovi/github-actions-bitops-ci-cd
   deploy-build-tools:

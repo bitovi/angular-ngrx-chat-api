@@ -1,5 +1,5 @@
 ---
-title: " v1.0.0"
+title: ' v1.0.0'
 language_tabs:
   - javascript--node: Node.JS
 headingLevel: 3
@@ -8,7 +8,6 @@ toc_footers:
 includes: []
 search: true
 highlight_theme: darkula
-
 ---
 
 # Angular NgRx Websocket Endpoint v1.0.0
@@ -19,15 +18,15 @@ Documentation for the Angular NgRx Websocket Endpoint
 
 Base URLs:
 
-* <a href="http://localhost:{port}/chat/{chatId}/send">http://localhost:{port}/chat/{chatId}/send</a>
+- <a href="http://localhost:{port}/chat/{chatId}/send">http://localhost:{port}/chat/{chatId}/send</a>
 
-    * **chatId** - You can get your `chatId` from the GET /chats REST endpoint Default: 397fed73-4bcb-49ea-938b-74d4fe5ce811
+  - **chatId** - You can get your `chatId` from the GET /chats REST endpoint Default: 397fed73-4bcb-49ea-938b-74d4fe5ce811
 
-    * **port** -  Default: 8080
+  - **port** - Default: 8080
 
-* <a href="https://dev.angular-ngrx-chat.com/chat/{chatId}/send">https://dev.angular-ngrx-chat.com/chat/{chatId}/send</a>
+- <a href="https://dev.angular-ngrx-chat.com/chat/{chatId}/send">https://dev.angular-ngrx-chat.com/chat/{chatId}/send</a>
 
-    * **chatId** - You can get your `chatId` from the GET /chats REST endpoint Default: 397fed73-4bcb-49ea-938b-74d4fe5ce811
+  - **chatId** - You can get your `chatId` from the GET /chats REST endpoint Default: 397fed73-4bcb-49ea-938b-74d4fe5ce811
 
 # Default
 
@@ -38,7 +37,6 @@ Base URLs:
 > Example headers
 
 ```json
-
 {
   "type": "object",
   "properties": {
@@ -52,29 +50,28 @@ Base URLs:
 > Example payload
 
 ```json
-
 "Hello world!"
 ```
 
-*Action to send a message.*
+_Action to send a message._
 
 #### Headers
 
 ##### Properties
 
-|Name|Type|Required|Description|
-|---|---|---|---|
-|» Authorization|any|false|Bearer {{Token}}|
+| Name            | Type | Required | Description      |
+| --------------- | ---- | -------- | ---------------- |
+| » Authorization | any  | false    | Bearer {{Token}} |
 
 #### Payload
 
 ##### Properties
 
-*Message*
+_Message_
 
-|Name|Type|Required|Description|
-|---|---|---|---|
-|*anonymous*|string|false|Message|
+| Name        | Type   | Required | Description |
+| ----------- | ------ | -------- | ----------- |
+| _anonymous_ | string | false    | Message     |
 
 <aside class="success">
 This operation does not require authentication
@@ -87,7 +84,6 @@ This operation does not require authentication
 > Example payload
 
 ```json
-
 {
   "type": "object",
   "properties": {
@@ -137,17 +133,16 @@ This operation does not require authentication
 
 ##### Properties
 
-|Name|Type|Required|Description|
-|---|---|---|---|
-|» chatId|string(uuid)|false|The chat's unique identifier|
-|» chatName|string|false|Name of chat|
-|» messageId|string(uuid)|false|The message's unique identifier|
-|» message|string|false|Name of chat|
-|» userId|string(uuid)|false|The user's unique identifier|
-|» username|string|false|Username of the user|
-|» sentAt|string|false|Message timestamp|
+| Name        | Type         | Required | Description                     |
+| ----------- | ------------ | -------- | ------------------------------- |
+| » chatId    | string(uuid) | false    | The chat's unique identifier    |
+| » chatName  | string       | false    | Name of chat                    |
+| » messageId | string(uuid) | false    | The message's unique identifier |
+| » message   | string       | false    | Name of chat                    |
+| » userId    | string(uuid) | false    | The user's unique identifier    |
+| » username  | string       | false    | Username of the user            |
+| » sentAt    | string       | false    | Message timestamp               |
 
 <aside class="success">
 This operation does not require authentication
 </aside>
-

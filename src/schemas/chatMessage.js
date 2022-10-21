@@ -1,3 +1,4 @@
+const errorSchema = require('./error')
 const { makeIdParams } = require('./params')
 
 const properties = {
@@ -39,6 +40,15 @@ const properties = {
     description: 'Sign up date',
     // example: '2022-09-28T19:05:43.633Z',
   },
+  modified: {
+    type: 'string',
+    description: 'Modified date',
+    // example: '2022-09-28T19:05:43.633Z',
+  },
+  entity: {
+    type: 'string',
+    description: 'User',
+  },
 }
 
 const tags = ['chat']
@@ -49,7 +59,6 @@ const createChat = {
   tags,
   body: {
     type: 'object',
-    required: ['chatName'],
     properties: {
       chatName: {
         type: 'string',
@@ -62,19 +71,57 @@ const createChat = {
   example: {
     chatName: 'Actions and Reducers',
   },
-  errortitle: {
-    required: {
-      chatName: 'chatName is required',
-    },
-  },
   response: {
     default: {
       description: 'Success: Chat created',
       type: 'object',
+      properties: {
+        data: properties,
+      },
       example: {
         data: {
           chatId: 'a889446b-550e-40ee-94ed-a503c1d7cc9e',
           chatName: 'Second chat',
+        },
+      },
+    },
+    409: {
+      description: 'Conflict Error',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: errorSchema,
+        },
+      },
+      example: {
+        error: {
+          status: '409',
+          code: 'duplicate-parameter',
+          title: 'Chat with name already exists.',
+          source: {
+            pointer: '/chatName',
+          },
+        },
+      },
+    },
+    422: {
+      description: 'Unprocessable entity',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: errorSchema,
+        },
+      },
+      example: {
+        error: {
+          status: '422',
+          code: 'parameter-required',
+          title: 'Please provide a chatName.',
+          source: {
+            pointer: '/chatName',
+          },
         },
       },
     },
@@ -89,6 +136,16 @@ const getChats = {
     default: {
       description: 'Default response',
       type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties,
+            uniqueItems: true,
+          },
+        },
+      },
       example: {
         data: [
           {
@@ -120,6 +177,16 @@ const getChatMessages = {
     default: {
       description: 'Default response',
       type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties,
+            uniqueItems: true,
+          },
+        },
+      },
       example: {
         data: [
           {

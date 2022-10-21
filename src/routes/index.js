@@ -103,7 +103,7 @@ const routes = async (fastify) => {
           ),
         ])
 
-        reply.send({
+        reply.status(201).send({
           token: signToken(id),
         })
       } catch (error) {
@@ -152,7 +152,7 @@ const routes = async (fastify) => {
       if (!user) {
         throw new ErrorResponse({
           title: "Username doesn't exist.",
-          code: codes.ERR_NOT_FOUND, //
+          code: codes.ERR_NOT_FOUND,
           status: statusCodes.NOT_FOUND,
           pointer: 'username',
         })
@@ -226,7 +226,7 @@ const routes = async (fastify) => {
         }
       }
 
-      reply.send({
+      reply.status(201).send({
         data: {
           chatId,
           chatName,
