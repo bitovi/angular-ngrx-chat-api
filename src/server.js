@@ -1,4 +1,6 @@
 const build = require('./app')
+const { tempMigration } = require('./db/tempMigration')
+const generateSocketDocs = require('./helpers/generateSocketDocs')
 
 const server = build()
 
