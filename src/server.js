@@ -4,8 +4,8 @@ const server = build()
 
 server.listen({ port: process.env.PORT, host: '::' }, async (err, address) => {
   try {
-    // await tempMigration()
-    // await generateSocketDocs()
+    await tempMigration()
+    await generateSocketDocs()
 
     if (err) throw err
 
