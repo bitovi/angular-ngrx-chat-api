@@ -32,7 +32,7 @@
     "aws-sdk": "^2.1198.0",
     "casual": "^1.6.2",
     "dynamodb-toolbox": "^0.4.3",
-    "fastify": "^4.4.0",
+    "fastify": "^5.8.5",
     "jsonwebtoken": "^8.5.1",
     "markdown-it": "^13.0.1",
     "uuid": "^8.3.2",
