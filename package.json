@@ -34,7 +34,7 @@
     "dynamodb-toolbox": "^0.4.3",
     "fastify": "^4.4.0",
     "jsonwebtoken": "^8.5.1",
-    "markdown-it": "^13.0.1",
+    "markdown-it": "^14.2.0",
     "uuid": "^8.3.2",
     "widdershins": "^4.0.1"
   },
